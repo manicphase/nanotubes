@@ -208,6 +208,7 @@ async function register ({ registerHook, peertubeHelpers }) {
       }
       console.log("queue:", job_queue)
       let job = job_queue.shift()
+      localStorage.setItem("nano_job_queue", JSON.stringify(job_queue))
       console.log("do job", job)
       minerIdle = false
       if (job.type == "pending") {
@@ -223,9 +224,10 @@ async function register ({ registerHook, peertubeHelpers }) {
         console.log("DOING SEND JOB", job)
         sendNano(job.amount, job.address)
       }
-      localStorage.setItem("nano_job_queue", JSON.stringify(job_queue))
     }
   }
+
+  setInterval(processJob, 10000)
 
   async function openAccount(pending_block) {
     window.worker_status = "Opening Account"
