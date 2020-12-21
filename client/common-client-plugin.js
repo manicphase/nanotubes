@@ -70,6 +70,8 @@ async function register ({ registerHook, peertubeHelpers }) {
           }
           show_details = !show_details
         })
+
+        document.getElementById("nano_seed").value = window.wallet.seed
         
         //send
         document.getElementById('send_button').onclick = function() {

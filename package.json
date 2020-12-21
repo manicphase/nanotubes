@@ -9,7 +9,7 @@
     "peertube",
     "plugin"
   ],
-  "version": "0.0.414",
+  "version": "0.1.2",
   "author": "dave",
   "bugs": "https://github.com/manicphase/nanotubes",
   "clientScripts": [
