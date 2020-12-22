@@ -14,7 +14,7 @@
   "bugs": "https://github.com/manicphase/nanotubes",
   "clientScripts": [
     {
-      "script": "node_modules/qrcode/build/qrcode.min.js",
+      "script": "client/qrcode.min.js",
       "scopes": [
         "common"
       ]
