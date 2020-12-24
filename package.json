@@ -9,10 +9,16 @@
     "peertube",
     "plugin"
   ],
-  "version": "0.1.4",
+  "version": "0.1.58",
   "author": "dave",
   "bugs": "https://github.com/manicphase/nanotubes",
   "clientScripts": [
+    {
+      "script": "client/wasm-pow/startThreads.js",
+      "scopes": [
+        "common"
+      ]
+    },
     {
       "script": "client/qrcode.min.js",
       "scopes": [
@@ -33,7 +39,9 @@
     },
     {
       "script": "client/video-watch-client-plugin.js",
-      "scopes": [ "video-watch" ]
+      "scopes": [
+        "video-watch"
+      ]
     },
     {
       "script": "client/common-client-plugin.js",
@@ -44,13 +52,17 @@
   ],
   "css": [],
   "library": "./main.js",
-  "staticDirs": {},
+  "staticDirs": {
+    "public": "public"
+  },
   "translations": {},
   "standard": {
     "globals": []
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
     "into-stream": "^6.0.0",
     "nano-webgl-pow": "^1.1.1",
     "nanocurrency-web": "^1.2.2",

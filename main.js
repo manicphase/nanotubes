@@ -1,5 +1,7 @@
+const fs = require('fs');
 var fetch = require('node-fetch');
 var request = require('request');
+var express = require('express');
 var intoStream = require('into-stream');
 var bodyParser = require('body-parser');
 var textParser = bodyParser.text({ limit: '50kb' });
@@ -33,6 +35,36 @@ async function register ({
   var url = await settingsManager.getSetting("rpc-path")
 
   const router = getRouter()
+
+  router.get('/getpath', function(req, res) {
+    res.send(__dirname);
+  })
+
+  // pow.js wants a relative path for pow.wasm, but the polyfill breaks it.
+  // here we set an absolute path and point pow.js to it. sickening, i know
+  router.get('/pow.wasm', function(req, res) {
+    fs.readFile(__dirname + '/client/wasm-pow/pow.wasm', (err, data) => {
+      if (err) res.send(err.message)
+      res.send(data)
+    })
+  })
+
+  router.get('/thread.js', function(req, res) {
+    fs.readFile(__dirname + '/client/wasm-pow/thread.js', (err, data) => {
+      if (err) res.send(err.message)
+      res.set('Content-Type', 'application/javascript')
+      res.send(data)
+    })
+  })
+
+  router.get('/pow.js', function(req, res) {
+    fs.readFile(__dirname + '/client/wasm-pow/pow.js', (err, data) => {
+      if (err) res.send(err.message)
+      res.set('Content-Type', 'application/javascript')
+      res.send(data)
+    })
+  })
+
   router.get('/nanonode', function(req, res) {
     req.pipe(request(url)).pipe(res);
   })

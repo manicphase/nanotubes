@@ -1,7 +1,3 @@
-//import { wallet } from '../node_modules/nanocurrency-web/dist/index.min.js'
-
-//import { wallet } from "nanocurrency-web";
-
 var walletSeed;
 var settings
 
@@ -23,6 +19,7 @@ async function register ({ registerHook, peertubeHelpers }) {
   var details_panel
   var panel_body
   window.worker_status = "Idle"
+
 
   // inject nano panel in menu. needs some work
   function injectPanel() {
@@ -86,6 +83,11 @@ async function register ({ registerHook, peertubeHelpers }) {
 
   const rpc_path = "/plugins/nanotubes/router/nanonode"
 
+  function wasm(hash, callback) {
+    const workers = window.pow_initiate(4, '');
+    window.pow_callback(workers, hash, () => {}, callback);
+  }
+
   function copyToClipboard() {
     var nanoAddressBox = document.getElementById("nano_address")
     nanoAddressBox.select()
@@ -112,12 +114,12 @@ async function register ({ registerHook, peertubeHelpers }) {
 
   var account_info;
   async function getInfo() {
-    console.log("get info...", my_address)
+    //console.log("get info...", my_address)
     //await getInfo(rpc_path, my_address).then(result => {account_info = result})
     await getSingle(rpc_path, "account_info", my_address).then(result => {account_info = result})
-    console.log(account_info)
-    console.log("got info")
-    console.log(account_info.error)
+    //console.log(account_info)
+    //console.log("got info")
+    //console.log(account_info.error)
     if (account_info.error == "Account not found") {
       new_account = true
     } else {
@@ -151,14 +153,14 @@ async function register ({ registerHook, peertubeHelpers }) {
 
   async function getPending() {
     await getMulti(rpc_path, "accounts_pending", my_address).then(result => {pending = result})
-    console.log(pending)
+    //console.log(pending)
     let pending_blocks = pending.blocks[my_address]
     for (var i=0; i<pending_blocks.length; i++) {
       console.log("add block")
       let job = {"type": "pending",
                  "block_hash": pending_blocks[i]}
       addJob(job)
-      console.log("added block")
+      console.log("added block", pending_blocks[i])
     }
   }
   getPending()
@@ -253,7 +255,8 @@ async function register ({ registerHook, peertubeHelpers }) {
     
     let preppedReceiveBlock = setUpReceiveBlock(receive_block_data)
     //console.log(account_info.balance, send_block_data.block.frontier, preppedSendBlock, setStatus)
-    NanoWebglPow(window.wallet.accounts[0].publicKey, preppedReceiveBlock, setStatus, "0x"+difficulty.network_receive_current.slice(0,8))
+    //NanoWebglPow(window.wallet.accounts[0].publicKey, preppedReceiveBlock, setStatus, "0x"+difficulty.network_receive_current.slice(0,8))
+    wasm(window.wallet.accounts[0].publicKey, preppedReceiveBlock)
   }
 
   function sendNano(send_amount, to_address) {
@@ -283,7 +286,8 @@ async function register ({ registerHook, peertubeHelpers }) {
 
     let preppedSendBlock = setUpSendBlock(send_block_data)
     console.log(account_info.balance, send_block_data.block.frontier, preppedSendBlock, setStatus)
-    NanoWebglPow(send_block_data.block.frontier, preppedSendBlock, setStatus, "0x"+difficulty.network_current.slice(0,8))
+    //NanoWebglPow(send_block_data.block.frontier, preppedSendBlock, setStatus, "0x"+difficulty.network_current.slice(0,8))
+    wasm(send_block_data.block.frontier, preppedSendBlock)
   }
 
   async function receiveNano(pending_block) {
@@ -311,7 +315,8 @@ async function register ({ registerHook, peertubeHelpers }) {
     let preppedReceiveBlock = setUpReceiveBlock(receive_block_data)
     //console.log(account_info.balance, send_block_data.block.frontier, preppedSendBlock, setStatus)
     console.log("RECEIVE", receive_block_data.block.frontier)
-    NanoWebglPow(receive_block_data.block.frontier, preppedReceiveBlock, setStatus, "0x"+difficulty.network_receive_current.slice(0,8))
+    //NanoWebglPow(receive_block_data.block.frontier, preppedReceiveBlock, setStatus, "0x"+difficulty.network_receive_current.slice(0,8))
+    wasm(receive_block_data.block.frontier, preppedReceiveBlock)
   }
 
 
@@ -331,10 +336,6 @@ async function register ({ registerHook, peertubeHelpers }) {
       insertBlock(rpc_path, block).then(result => {console.log(result)})
       await getInfo().then(() => {minerIdle = true})
       window.worker_status = "Idle"
-      /*await getSingle(rpc_path, "account_info", my_address).then(result => {
-        account_info = result;
-        minerIdle = true;
-      })*/
     }
   }
   
@@ -354,10 +355,6 @@ async function register ({ registerHook, peertubeHelpers }) {
       insertBlock(rpc_path, block).then(result => {console.log(result)})
       await getInfo().then(() => {minerIdle = true})
       window.worker_status = "Idle"
-      /*await getSingle(rpc_path, "account_info", my_address).then(result => {
-        account_info = result;
-        minerIdle = true;
-      })*/
     }
   }
 
