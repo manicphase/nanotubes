@@ -84,7 +84,7 @@ async function register ({ registerHook, peertubeHelpers }) {
   const rpc_path = "/plugins/nanotubes/router/nanonode"
 
   function wasm(hash, callback) {
-    const workers = window.pow_initiate(4, '');
+    const workers = window.pow_initiate(8, '');
     window.pow_callback(workers, hash, () => {}, callback);
   }
 
@@ -255,8 +255,8 @@ async function register ({ registerHook, peertubeHelpers }) {
     
     let preppedReceiveBlock = setUpReceiveBlock(receive_block_data)
     //console.log(account_info.balance, send_block_data.block.frontier, preppedSendBlock, setStatus)
-    //NanoWebglPow(window.wallet.accounts[0].publicKey, preppedReceiveBlock, setStatus, "0x"+difficulty.network_receive_current.slice(0,8))
-    wasm(window.wallet.accounts[0].publicKey, preppedReceiveBlock)
+    NanoWebglPow(window.wallet.accounts[0].publicKey, preppedReceiveBlock, setStatus, "0x"+difficulty.network_receive_current.slice(0,8))
+    //wasm(window.wallet.accounts[0].publicKey, preppedReceiveBlock)
   }
 
   function sendNano(send_amount, to_address) {
@@ -286,8 +286,8 @@ async function register ({ registerHook, peertubeHelpers }) {
 
     let preppedSendBlock = setUpSendBlock(send_block_data)
     console.log(account_info.balance, send_block_data.block.frontier, preppedSendBlock, setStatus)
-    //NanoWebglPow(send_block_data.block.frontier, preppedSendBlock, setStatus, "0x"+difficulty.network_current.slice(0,8))
-    wasm(send_block_data.block.frontier, preppedSendBlock)
+    NanoWebglPow(send_block_data.block.frontier, preppedSendBlock, setStatus, "0x"+difficulty.network_current.slice(0,8))
+    //wasm(send_block_data.block.frontier, preppedSendBlock)
   }
 
   async function receiveNano(pending_block) {
@@ -315,8 +315,8 @@ async function register ({ registerHook, peertubeHelpers }) {
     let preppedReceiveBlock = setUpReceiveBlock(receive_block_data)
     //console.log(account_info.balance, send_block_data.block.frontier, preppedSendBlock, setStatus)
     console.log("RECEIVE", receive_block_data.block.frontier)
-    //NanoWebglPow(receive_block_data.block.frontier, preppedReceiveBlock, setStatus, "0x"+difficulty.network_receive_current.slice(0,8))
-    wasm(receive_block_data.block.frontier, preppedReceiveBlock)
+    NanoWebglPow(receive_block_data.block.frontier, preppedReceiveBlock, setStatus, "0x"+difficulty.network_receive_current.slice(0,8))
+    //wasm(receive_block_data.block.frontier, preppedReceiveBlock)
   }
 
 

@@ -33,8 +33,8 @@ function hex_reverse(hex) {
 function calculate(hashHex, callback, progressCallback, threshold = '0xFFFFFFF8') {
   if(typeof threshold === 'number') threshold = '0x' + threshold.toString(16);
 
-  const canvas = document.createElement('canvas');
-
+  //const canvas = document.createElement('canvas');
+  const canvas = new OffscreenCanvas(256,256);
   canvas.width = window.NanoWebglPow.width;
   canvas.height = window.NanoWebglPow.height;
 
